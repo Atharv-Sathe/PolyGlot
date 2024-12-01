@@ -20,10 +20,19 @@ export default function Home() {
   const [originalText, setOriginalText] = useState<string>("");
 
   useEffect(() => {
-    chrome.runtime.sendMessage({ action: "getSelectedText" }, (response) => {
-      if (response && response.text) {
-        setOriginalText(response.text);
-      }
+    // Get the current active tab
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      const currentTab = tabs[0];
+      const tabId = currentTab.id;
+
+      // Request selected text for the current tab
+      chrome.runtime.sendMessage({ action: 'getSelectedText', tabId }, (response) => {
+        if (response && response.text) {
+          setOriginalText(response.text);
+        } else {
+          setOriginalText('No text selected.');
+        }
+      });
     });
   }, []);
 

@@ -16,11 +16,13 @@
   "permissions": [
     "activeTab",
     "sidePanel",
+    "scripting",
+    "tabs",
     "aiLanguageModelOriginTrial"
   ],
   "trial_tokens": ["ArwAcPq3I0fVJc9W5HfOK6JDslESWmr08zY2fu/zjuuMNMovZKk7aXnpAYQlrHh97MjVS/KE+Au0hCOx6MdNMwUAAAB4eyJvcmlnaW4iOiJjaHJvbWUtZXh0ZW5zaW9uOi8vb2xwZHBnbnBjZWJuYWZwcGxraGRkZGpkaG1oZmVnYm8iLCJmZWF0dXJlIjoiQUlQcm9tcHRBUElGb3JFeHRlbnNpb24iLCJleHBpcnkiOjE3NjA0ODYzOTl9"],
   "background": {
-    "service_worker": "src/pages/background/summarize.js"
+    "service_worker": "src/pages/background/background.js"
   },
   "content_scripts": [
     {
@@ -33,9 +35,10 @@
       "resources": [
         "contentStyle.css",
         "icon-128.png",
-        "icon-32.png"
+        "icon-32.png",
+        "src/pages/content/getSelection.js"
       ],
-      "matches": []
+      "matches": ["<all_urls>"]
     }
   ]
 }
