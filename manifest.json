@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "version": "1.0.0",
   "name": "PolyGlot @Sat",
-  "key": "olpdpgnpcebnafpplkhdddjdhmhfegbo",
+  "key": "lpdkmhhpgbhmfpckcloemkihkdffddle",
   "description": "description in manifest.json",
   "action": {
     "default_popup": "src/pages/popup/index.html",
@@ -20,14 +20,14 @@
     "tabs",
     "aiLanguageModelOriginTrial"
   ],
-  "trial_tokens": ["ArwAcPq3I0fVJc9W5HfOK6JDslESWmr08zY2fu/zjuuMNMovZKk7aXnpAYQlrHh97MjVS/KE+Au0hCOx6MdNMwUAAAB4eyJvcmlnaW4iOiJjaHJvbWUtZXh0ZW5zaW9uOi8vb2xwZHBnbnBjZWJuYWZwcGxraGRkZGpkaG1oZmVnYm8iLCJmZWF0dXJlIjoiQUlQcm9tcHRBUElGb3JFeHRlbnNpb24iLCJleHBpcnkiOjE3NjA0ODYzOTl9"],
+  "trial_tokens": ["AtyDiRwEfo4kUxRQiHiYz+WN/jb39ErvEPOjVlIa4DYs7BLh1beMdbpwn6dK0tLUyK/X1vRoTZMk9sm7m0R0hQcAAABveyJvcmlnaW4iOiJjaHJvbWUtZXh0ZW5zaW9uOi8vbGJvcGpiYmtqZW1pYmtqY2hrbWlhZmZmanBpaWdiY2siLCJmZWF0dXJlIjoiVHJhbnNsYXRpb25BUEkiLCJleHBpcnkiOjE3NTMxNDI0MDB9"],
   "background": {
     "service_worker": "src/pages/background/background.js"
   },
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["src/pages/content/getSelection.js"]
+      "js": ["src/pages/content/getSelection.js", "src/pages/content/handleLogic.js"]
     }
   ],
   "web_accessible_resources": [
@@ -36,7 +36,8 @@
         "contentStyle.css",
         "icon-128.png",
         "icon-32.png",
-        "src/pages/content/getSelection.js"
+        "src/pages/content/getSelection.js",
+        "src/pages/content/handleLogic.js"
       ],
       "matches": ["<all_urls>"]
     }

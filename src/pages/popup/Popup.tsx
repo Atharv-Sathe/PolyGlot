@@ -10,7 +10,7 @@ import { SUPPORTED_LANGUAGES } from "../../types";
 export default function Home() {
   const [mode, setMode] = useState<Mode>("academic");
   const [summaryLength, setSummaryLength] = useState<SummaryLength>("2min");
-  const [tab, setTab] = useState<ContentTab>("original");
+  const [tabExt, setTab] = useState<ContentTab>("original");
   const [sourceLanguage, setSourceLanguage] = useState<Language>(
     SUPPORTED_LANGUAGES[0]
   );
@@ -18,30 +18,61 @@ export default function Home() {
     SUPPORTED_LANGUAGES[1]
   );
   const [originalText, setOriginalText] = useState<string>("");
+  const [translatedText, setTranslatedText] = useState<string>("");
+  const [summarizedText, setSummarizedText] = useState<string>("");
 
   useEffect(() => {
+    console.log(tabExt);
     // Get the current active tab
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       const currentTab = tabs[0];
       const tabId = currentTab.id;
 
       // Request selected text for the current tab
-      chrome.runtime.sendMessage({ action: 'getSelectedText', tabId }, (response) => {
-        if (response && response.text) {
-          setOriginalText(response.text);
-        } else {
-          setOriginalText('No text selected.');
-        }
-      });
+      if (tabExt === "original") {
+        console.log("Sending Msg to retrieve selected text");
+        chrome.runtime.sendMessage(
+          { action: "getSelectedText", tabId },
+          (response) => {
+            if (response && response.text) {
+              setOriginalText(response.text);
+            } else {
+              setOriginalText("No text selected.");
+            }
+          }
+        );
+      } else if (tabExt === "translated") {
+        console.log("Sending msg to retrieve translated text");
+        chrome.runtime.sendMessage(
+          { action: "getTranslatedText", tabId },
+          (response) => {
+            if (response && response.text) {
+              setTranslatedText(response.text);
+            } else {
+              setTranslatedText("No Text Selected");
+            }
+          }
+        );
+      } else if (tabExt === "summary") {
+        console.log("sending msg to retrieve summary");
+        chrome.runtime.sendMessage(
+          { action: "getSummarizedText", tabId },
+          (response) => {
+            if (response && response.text) {
+              setSummarizedText(response.text);
+            } else {
+              setSummarizedText("No Text Selected");
+            }
+          }
+        );
+      }
     });
-  }, []);
+  }, [tabExt]);
 
   const sampleContent = {
     originalText: originalText,
-    translatedText:
-      "El modelo mecánico cuántico del átomo se basa en las matemáticas que describen la probabilidad de encontrar un electrón en un punto dado alrededor del núcleo.",
-    summary:
-      "The quantum mechanical model describes electron probability distributions around atomic nuclei using mathematical principles.",
+    translatedText: translatedText,
+    summary: summarizedText,
   };
 
   const keyConcepts = [
@@ -61,7 +92,7 @@ export default function Home() {
         onSummaryLengthChange={setSummaryLength}
       />
       <ContentView
-        tab={tab}
+        tab={tabExt}
         content={sampleContent}
         sourceLanguage={sourceLanguage}
         targetLanguage={targetLanguage}
