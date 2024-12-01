@@ -13,7 +13,7 @@ export default mergeConfig(
         manifest: {
           ...baseManifest,
           background: {
-            service_worker: 'src/pages/background/index.ts',
+            service_worker: 'src/pages/background/summarize.js',
             type: 'module'
           },
         } as ManifestV3Export,
