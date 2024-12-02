@@ -1,36 +1,37 @@
-console.log("Translator Imported");
-// let forTranslation = {};
+const otMeta = document.createElement("meta");
+otMeta.httpEquiv = "origin-trial";
+otMeta.content =
+  "AtyDiRwEfo4kUxRQiHiYz+WN/jb39ErvEPOjVlIa4DYs7BLh1beMdbpwn6dK0tLUyK/X1vRoTZMk9sm7m0R0hQcAAABveyJvcmlnaW4iOiJjaHJvbWUtZXh0ZW5zaW9uOi8vbGJvcGpiYmtqZW1pYmtqY2hrbWlhZmZmanBpaWdiY2siLCJmZWF0dXJlIjoiVHJhbnNsYXRpb25BUEkiLCJleHBpcnkiOjE3NTMxNDI0MDB9";
+document.head.append(otMeta);
 
-// chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
-//   if (message.action === "selectedText") {
-//     try {
-//       const tabId = sender.tab.id;
-//       forTranslation[tabId] = message.text;
-//       console.log(`Text for translation ${tabId}: ${message.text}`);
-        
-//       // Assuming self.translation.createTranslator is a valid API call
-//       const translator = await self.translation.createTranslator({
-//         sourceLanguage: "en",
-//         targetLanguage: "fr",
-//       });
-
-//       const translatedText = await translator.translate(forTranslation[tabId]);
-//       console.log(translatedText);
-
-//     } catch (error) {
-//       console.error("Translation error:", error);
-//     }
-//   }
-//   return true; // Keep the message channel open for sendResponse
-// });
+chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+  if (msg.action === "fetchTranslatedText") {
+    console.log("Request for Translation received in content script!");
+    translateToTrg(msg.text, "en", "fr")
+      .then((translatedText) => {
+        // console.log("Translated Text:", translatedText);
+        sendResponse({ text: translatedText }); // Send the response back to mediator
+      })
+      .catch((error) => {
+        console.error("Translation Error:", error);
+        sendResponse({ text: "", error: error.message }); // Send error back
+      });
+    return true; // Keeps the message port open for async response
+  }
+});
 
 async function translateToTrg(selectedText, src, trg) {
-  const translator = await self.translation.createTranslator({
-    sourceLanguage: src,
-    targetLanguage: trg,
-  });
+  try {
+    const translator = await self.translation.createTranslator({
+      sourceLanguage: src,
+      targetLanguage: trg,
+    });
 
-  const translatedText = await translator.translate(selectedText);
-  // console.log(translatedText);
-  return translatedText;
+    const translatedText = await translator.translate(selectedText);
+    // console.log("Translated Text: ", translatedText);
+    return translatedText;
+  } catch (error) {
+    console.error("Error in translateToTrg: ", error);
+    throw error;
+  }
 }

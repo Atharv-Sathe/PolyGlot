@@ -20,14 +20,17 @@
     "tabs",
     "aiLanguageModelOriginTrial"
   ],
-  "trial_tokens": ["AtyDiRwEfo4kUxRQiHiYz+WN/jb39ErvEPOjVlIa4DYs7BLh1beMdbpwn6dK0tLUyK/X1vRoTZMk9sm7m0R0hQcAAABveyJvcmlnaW4iOiJjaHJvbWUtZXh0ZW5zaW9uOi8vbGJvcGpiYmtqZW1pYmtqY2hrbWlhZmZmanBpaWdiY2siLCJmZWF0dXJlIjoiVHJhbnNsYXRpb25BUEkiLCJleHBpcnkiOjE3NTMxNDI0MDB9"],
   "background": {
     "service_worker": "src/pages/background/background.js"
   },
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["src/pages/content/getSelection.js", "src/pages/content/handleLogic.js"]
+      "js": [
+        "src/pages/content/getSelection.js", 
+        "src/pages/content/translate.js",
+        "src/pages/content/summarize.js"
+      ]
     }
   ],
   "web_accessible_resources": [

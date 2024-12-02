@@ -24,7 +24,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         (response) => {
           if (chrome.runtime.lastError) {
             console.error("Message Error: ", chrome.runtime.lastError.message);
-
           } else {
             console.log("Translation Response Received: ", response.text);
             sendResponse({ text: response.text || "" });
@@ -32,7 +31,31 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
           }
         }
       );
-
+    } catch (error) {
+      console.error("Error relaying translation request:", error);
+      sendResponse({ text: "" });
+    }
+    return true;
+  } else if (message.action === "getSummarizedText") {
+    console.log("Relaying summarization request!");
+    const tabId = message.tabId;
+    try {
+      chrome.tabs.sendMessage(
+        tabId,
+        {
+          action: "fetchSummarizedText",
+          text: selectedTexts[tabId],
+        },
+        (response) => {
+          if (chrome.runtime.lastError) {
+            console.error("Message error: ", chrome.runtime.lastError.message);
+          } else {
+            console.log("Summarization received: ", response.text);
+            sendResponse({ text: response.text || "" });
+            console.log("Summarized text sent to popup.js!");
+          }
+        }
+      );
     } catch (error) {
       console.error("Error relaying translation request:", error);
       sendResponse({ text: "" });
