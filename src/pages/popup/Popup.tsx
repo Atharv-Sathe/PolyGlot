@@ -28,47 +28,50 @@ export default function Home() {
       const currentTab = tabs[0];
       const tabId = currentTab.id;
 
-      // Request selected text for the current tab
-      if (tabExt === "original") {
-        console.log("Sending Msg to retrieve selected text");
-        chrome.runtime.sendMessage(
-          { action: "getSelectedText", tabId },
-          (response) => {
-            if (response && response.text) {
-              setOriginalText(response.text);
-            } else {
-              setOriginalText("No text selected.");
-            }
+      let action = "";
+      if (tabExt === "original") action = "getSelectedText";
+      else if (tabExt === "translated") action = "getTranslatedText";
+      else if (tabExt === "summary") action = "getSummarizedText";
+      
+      if (action) {
+        console.log(`Sending message to retrieve ${tabExt} text!`);
+        chrome.runtime.sendMessage({ action, tabId}, (response) => {
+          if (chrome.runtime.lastError) {
+            console.error("Message Error: ", chrome.runtime.lastError.message);
+            return;
           }
-        );
-      } else if (tabExt === "translated") {
-        console.log("Sending msg to retrieve translated text");
-        chrome.runtime.sendMessage(
-          { action: "getTranslatedText", tabId },
-          (response) => {
-            if (response && response.text) {
-              setTranslatedText(response.text);
-            } else {
-              setTranslatedText("No Text Selected");
-            }
-          }
-        );
-      } else if (tabExt === "summary") {
-        console.log("sending msg to retrieve summary");
-        chrome.runtime.sendMessage(
-          { action: "getSummarizedText", tabId },
-          (response) => {
-            if (response && response.text) {
-              setSummarizedText(response.text);
-            } else {
-              setSummarizedText("No Text Selected");
-            }
-          }
-        );
+          const text = response?.text || "No Text available.";
+          if (tabExt === "original") setOriginalText(text);
+          else if (tabExt === 'translated') setTranslatedText(text);
+          else if (tabExt === 'summary') setSummarizedText(text);
+        });
       }
+      // if (action) {
+      //   console.log(`Sending message to retrieve ${tabExt} text!`);
+      //   try {
+      //     const response = await new Promise((resolve, reject) => {
+      //       chrome.runtime.sendMessage({ action, tabId}, (response) => {
+      //         if (chrome.runtime.lastError) {
+      //           console.error("Message Error: ", chrome.runtime.lastError.message);
+      //           // return;
+      //           reject(chrome.runtime.lastError);
+      //         } else {
+      //           console.log("Response received from mediator: ", response.text);
+      //           resolve(response);
+      //         }
+      //       });
+      //     })
+      //     const text = response?.text || "No Text available.";
+      //     if (tabExt === "original") setOriginalText(text);
+      //     else if (tabExt === 'translated') setTranslatedText(text);
+      //     else if (tabExt === 'summary') setSummarizedText(text);
+      //   } catch(error) {
+      //     console.error("Error:", error);
+      //   }
+      // }
     });
   }, [tabExt]);
-
+  
   const sampleContent = {
     originalText: originalText,
     translatedText: translatedText,

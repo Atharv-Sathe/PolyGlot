@@ -6,17 +6,8 @@ document.addEventListener("mouseup", () => {
       action: "selectedText",
       text: selectedText,
     });
-    // const translated = translateToTrg(selectedText, "en", "fr");
+    console.log("Selected text sent to mediator.");
+    console.log(selectedText);
   }
 });
 
-// async function translateToTrg(selectedText, src, trg) {
-//     const translator = await self.translation.createTranslator({
-//       sourceLanguage: src,
-//       targetLanguage: trg,
-//     });
-  
-//     const translatedText = await translator.translate(selectedText);
-//     console.log(translatedText);
-//     return translatedText;
-//   }
