@@ -32,10 +32,10 @@ export default function Home() {
       if (tabExt === "original") action = "getSelectedText";
       else if (tabExt === "translated") action = "getTranslatedText";
       else if (tabExt === "summary") action = "getSummarizedText";
-      
+      let targetLang = "hi";
       if (action) {
         console.log(`Sending message to retrieve ${tabExt} text!`);
-        chrome.runtime.sendMessage({ action, tabId}, (response) => {
+        chrome.runtime.sendMessage({ action, tabId, targetLang}, (response) => {
           if (chrome.runtime.lastError) {
             console.error("Message Error: ", chrome.runtime.lastError.message);
             return;
@@ -46,29 +46,6 @@ export default function Home() {
           else if (tabExt === 'summary') setSummarizedText(text);
         });
       }
-      // if (action) {
-      //   console.log(`Sending message to retrieve ${tabExt} text!`);
-      //   try {
-      //     const response = await new Promise((resolve, reject) => {
-      //       chrome.runtime.sendMessage({ action, tabId}, (response) => {
-      //         if (chrome.runtime.lastError) {
-      //           console.error("Message Error: ", chrome.runtime.lastError.message);
-      //           // return;
-      //           reject(chrome.runtime.lastError);
-      //         } else {
-      //           console.log("Response received from mediator: ", response.text);
-      //           resolve(response);
-      //         }
-      //       });
-      //     })
-      //     const text = response?.text || "No Text available.";
-      //     if (tabExt === "original") setOriginalText(text);
-      //     else if (tabExt === 'translated') setTranslatedText(text);
-      //     else if (tabExt === 'summary') setSummarizedText(text);
-      //   } catch(error) {
-      //     console.error("Error:", error);
-      //   }
-      // }
     });
   }, [tabExt]);
   

@@ -20,6 +20,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         {
           action: "fetchTranslatedText",
           text: selectedTexts[tabId],
+          targetLang: message.targetLang,
         },
         (response) => {
           if (chrome.runtime.lastError) {

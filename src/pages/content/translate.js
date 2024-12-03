@@ -7,7 +7,7 @@ document.head.append(otMeta);
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (msg.action === "fetchTranslatedText") {
     console.log("Request for Translation received in content script!");
-    translateToTrg(msg.text, "en", "fr")
+    translateToTrg(msg.text, "en", msg.targetLang)
       .then((translatedText) => {
         // console.log("Translated Text:", translatedText);
         sendResponse({ text: translatedText }); // Send the response back to mediator
