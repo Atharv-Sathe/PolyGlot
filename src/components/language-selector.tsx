@@ -1,123 +1,73 @@
-import React, { useState } from "react";
-import { Languages, ChevronDown, Check } from "lucide-react";
-import { Language, SUPPORTED_LANGUAGES } from "../types";
-
-interface LanguageSelectorProps {
-    sourceLanguage: Language;
-    targetLanguage: Language;
-    onSourceLanguageChange: (language: Language) => void;
-    onTargetLanguageChange: (language: Language) => void;
-}
+import React, { useState, useRef, useEffect } from "react";
+import { ChevronDown } from "lucide-react";
+import { languages, type Language } from "../types";
 
 export function LanguageSelector({
-    sourceLanguage,
-    targetLanguage,
-    onSourceLanguageChange,
-    onTargetLanguageChange,
-}: LanguageSelectorProps) {
-    const [isSourceOpen, setIsSourceOpen] = useState(false);
-    const [isTargetOpen, setIsTargetOpen] = useState(false);
+    setTargetLang,
+}: {
+    setTargetLang: React.Dispatch<React.SetStateAction<string>>;
+}) {
+    const [isOpen, setIsOpen] = useState(false);
+    const [selectedLanguage, setSelectedLanguage] = useState(languages[0]);
+    const dropdownRef = useRef<HTMLDivElement>(null);
 
-    const LanguageButton = ({
-        language,
-        onClick,
-        isOpen,
-    }: {
-        language: Language;
-        onClick: () => void;
-        isOpen: boolean;
-    }) => (
-        <button
-            onClick={onClick}
-            className="flex items-center space-x-2 px-3 py-1.5 bg-white rounded-md border border-gray-200 hover:bg-gray-50 relative"
-        >
-            <span className="text-sm">{language.flag}</span>
-            <span className="text-sm text-gray-700">{language.name}</span>
-            <ChevronDown
-                className={`w-4 h-4 text-gray-400 transition-transform ${
-                    isOpen ? "transform rotate-180" : ""
-                }`}
-            />
-        </button>
-    );
+    useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+            if (
+                dropdownRef.current &&
+                !dropdownRef.current.contains(event.target as Node)
+            ) {
+                setIsOpen(false);
+            }
+        }
 
-    const LanguageDropdown = ({
-        languages,
-        selectedLanguage,
-        onSelect,
-        isOpen,
-        onClose,
-    }: {
-        languages: Language[];
-        selectedLanguage: Language;
-        onSelect: (language: Language) => void;
-        isOpen: boolean;
-        onClose: () => void;
-    }) => {
-        if (!isOpen) return null;
+        document.addEventListener("mousedown", handleClickOutside);
+        return () =>
+            document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
 
-        return (
-            <>
-                <div className="fixed inset-0" onClick={onClose} />
-                <div className="absolute top-full mt-1 w-48 bg-white rounded-md shadow-lg border border-gray-200 py-1 z-50">
-                    {languages.map((language) => (
-                        <button
-                            key={language.code}
-                            onClick={() => {
-                                onSelect(language);
-                                onClose();
-                            }}
-                            className="w-full flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-gray-50"
-                        >
-                            <span className="mr-2">{language.flag}</span>
-                            <span className="flex-1 text-left">
-                                {language.name}
-                            </span>
-                            {language.code === selectedLanguage.code && (
-                                <Check className="w-4 h-4 text-indigo-600" />
-                            )}
-                        </button>
-                    ))}
-                </div>
-            </>
-        );
+    const handleLanguageSelect = (language: Language) => {
+        setSelectedLanguage(language);
+        setTargetLang(language.code);
+        setIsOpen(false);
     };
 
     return (
-        <div className="relative bg-gray-50 px-3 py-2 border-b flex items-center justify-center space-x-3">
-            <div className="relative">
-                <LanguageButton
-                    language={sourceLanguage}
-                    onClick={() => setIsSourceOpen(!isSourceOpen)}
-                    isOpen={isSourceOpen}
+        <div className="relative" ref={dropdownRef}>
+            <button
+                id="language-select"
+                onClick={() => setIsOpen(!isOpen)}
+                className="flex items-center gap-2 px-4 py-1 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors min-w-[180px]"
+            >
+                <span className="text-lg">{selectedLanguage.flag}</span>
+                <span className="text-gray-700">{selectedLanguage.name}</span>
+                <ChevronDown
+                    className={`w-4 h-4 text-gray-500 transition-transform ml-auto ${
+                        isOpen ? "transform rotate-180" : ""
+                    }`}
                 />
-                <LanguageDropdown
-                    languages={SUPPORTED_LANGUAGES}
-                    selectedLanguage={sourceLanguage}
-                    onSelect={onSourceLanguageChange}
-                    isOpen={isSourceOpen}
-                    onClose={() => setIsSourceOpen(false)}
-                />
-            </div>
+            </button>
 
-            <div className="flex items-center">
-                <Languages className="w-4 h-4 text-indigo-600" />
-            </div>
-
-            <div className="relative">
-                <LanguageButton
-                    language={targetLanguage}
-                    onClick={() => setIsTargetOpen(!isTargetOpen)}
-                    isOpen={isTargetOpen}
-                />
-                <LanguageDropdown
-                    languages={SUPPORTED_LANGUAGES}
-                    selectedLanguage={targetLanguage}
-                    onSelect={onTargetLanguageChange}
-                    isOpen={isTargetOpen}
-                    onClose={() => setIsTargetOpen(false)}
-                />
-            </div>
+            {isOpen && (
+                <div className="absolute mt-2 w-full bg-white border border-gray-200 rounded-lg shadow-lg z-10 max-h-[280px] overflow-y-auto">
+                    {languages.map((language) => (
+                        <button
+                            key={language.code}
+                            onClick={() => handleLanguageSelect(language)}
+                            className={`w-full flex items-center gap-2 px-4 py-2 hover:bg-gray-50 transition-colors ${
+                                selectedLanguage.code === language.code
+                                    ? "bg-gray-50"
+                                    : ""
+                            }`}
+                        >
+                            <span className="text-lg">{language.flag}</span>
+                            <span className="text-gray-700">
+                                {language.name}
+                            </span>
+                        </button>
+                    ))}
+                </div>
+            )}
         </div>
     );
 }
