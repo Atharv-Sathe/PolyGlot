@@ -1,6 +1,6 @@
 export type Mode = "academic" | "quick" | "professional";
 export type ContentTab = "original" | "translated" | "summary";
-export type SummaryLength = "30sec" | "2min" | "5min";
+export type SummaryLength = "Short" | "Medium" | "Long";
 
 export interface Language {
     code: string;
@@ -8,15 +8,16 @@ export interface Language {
     flag: string;
 }
 
-export const SUPPORTED_LANGUAGES: Language[] = [
-    { code: "en", name: "English", flag: "🇬🇧" },
-    { code: "es", name: "Spanish", flag: "🇪🇸" },
-    { code: "fr", name: "French", flag: "🇫🇷" },
-    { code: "de", name: "German", flag: "🇩🇪" },
-    { code: "it", name: "Italian", flag: "🇮🇹" },
-    { code: "pt", name: "Portuguese", flag: "🇵🇹" },
-    { code: "ru", name: "Russian", flag: "🇷🇺" },
-    { code: "zh", name: "Chinese", flag: "🇨🇳" },
-    { code: "ja", name: "Japanese", flag: "🇯🇵" },
-    { code: "ko", name: "Korean", flag: "🇰🇷" },
+export const languages: Language[] = [
+    { code: "en", name: "English", flag: "🇺🇸" },
+    { code: "zh", name: "简体中文", flag: "🇨🇳" },
+    { code: "zh-Hant", name: "繁體中文", flag: "🇹🇼" },
+    { code: "ja", name: "日本語", flag: "🇯🇵" },
+    { code: "pt", name: "Português", flag: "🇵🇹" },
+    { code: "ru", name: "Русский", flag: "🇷🇺" },
+    { code: "es", name: "Español", flag: "🇪🇸" },
+    { code: "tr", name: "Türkçe", flag: "🇹🇷" },
+    { code: "hi", name: "हिन्दी", flag: "🇮🇳" },
+    { code: "vi", name: "Tiếng Việt", flag: "🇻🇳" },
+    { code: "bn", name: "বাংলা", flag: "🇧🇩" },
 ];
