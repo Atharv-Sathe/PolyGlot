@@ -56,7 +56,7 @@ export function Controls({
             <div className="flex items-center space-x-2 text-xs">
                 <span className="text-gray-600">Summary:</span>
                 <div className="flex space-x-1">
-                    {(["30sec", "2min", "5min"] as SummaryLength[]).map(
+                    {(["Short", "Medium", "Long"] as SummaryLength[]).map(
                         (length) => (
                             <button
                                 key={length}
