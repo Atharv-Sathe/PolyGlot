@@ -9,21 +9,15 @@ interface ContentViewProps {
         translatedText: string;
         summary: string;
     };
-    sourceLanguage: Language;
-    targetLanguage: Language;
-    onSourceLanguageChange: (language: Language) => void;
-    onTargetLanguageChange: (language: Language) => void;
     onTabChange: (tab: ContentTab) => void;
+    setTargetLang: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export function ContentView({
     tab,
     content,
-    sourceLanguage,
-    targetLanguage,
-    onSourceLanguageChange,
-    onTargetLanguageChange,
     onTabChange,
+    setTargetLang,
 }: ContentViewProps) {
     return (
         <div className="flex flex-col flex-1 overflow-hidden text-black">
@@ -70,10 +64,7 @@ export function ContentView({
                     {tab === "translated" && (
                         <TranslatedContent
                             translatedText={content.translatedText}
-                            sourceLanguage={sourceLanguage}
-                            targetLanguage={targetLanguage}
-                            onSourceLanguageChange={onSourceLanguageChange}
-                            onTargetLanguageChange={onTargetLanguageChange}
+                            setTargetLang={setTargetLang}
                         />
                     )}
                     {tab === "summary" && (
