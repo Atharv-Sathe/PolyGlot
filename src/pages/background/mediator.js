@@ -46,6 +46,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         {
           action: "fetchSummarizedText",
           text: selectedTexts[tabId],
+          tone: message.tone,
+          length: message.length,
         },
         (response) => {
           if (chrome.runtime.lastError) {

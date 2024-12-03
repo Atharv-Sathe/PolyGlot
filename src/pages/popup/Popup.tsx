@@ -33,9 +33,11 @@ export default function Home() {
       else if (tabExt === "translated") action = "getTranslatedText";
       else if (tabExt === "summary") action = "getSummarizedText";
       let targetLang = "hi";
+      let tone = 'academic';
+      let length = 'long';
       if (action) {
         console.log(`Sending message to retrieve ${tabExt} text!`);
-        chrome.runtime.sendMessage({ action, tabId, targetLang}, (response) => {
+        chrome.runtime.sendMessage({ action, tabId, targetLang, tone, length}, (response) => {
           if (chrome.runtime.lastError) {
             console.error("Message Error: ", chrome.runtime.lastError.message);
             return;

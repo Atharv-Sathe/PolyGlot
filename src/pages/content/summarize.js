@@ -8,8 +8,8 @@ console.log("Summarizer Imported!");
 
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (msg.action === "fetchSummarizedText") {
-    console.log("Request for Translation received in content script!");
-    summarize(msg.text)
+    console.log("Request for Summarization received in content script!");
+    summarize(msg.text, msg.tone, msg.length)
       .then((summarizedText) => {
         // console.log("Summarized Text:", summarizedText);
         sendResponse({ text: summarizedText }); // Send the response back to mediator
@@ -30,7 +30,23 @@ const options = {
   length: "medium",
 };
 
-async function initializeSummarizer() {
+// Model Quick - Short
+const quickShort = {
+  sharedContext: "This is a general knowledge.",
+  type: "key-points",
+  format: "markdown",
+  length: "short",  
+}
+
+// Model Academic Long
+const acadLong = {
+  sharedContext: "This is a general knowledge.",
+  type: "key-points",
+  format: "markdown",
+  length: "long",   
+}
+
+async function initializeSummarizer(mode) {
   const available = (await self.ai.summarizer.capabilities()).available;
   let summarizer;
   if (available === "no") {
@@ -41,11 +57,11 @@ async function initializeSummarizer() {
   if (available === "readily") {
     // The Summarizer API can be used immediately .
     console.log("Summarizer is ready!")
-    summarizer = await self.ai.summarizer.create(options);
+    summarizer = await self.ai.summarizer.create(mode);
   } else {
     // The Summarizer API can be used after the model is downloaded.
     console.log("Summarizer is being created!");
-    summarizer = await self.ai.summarizer.create(options);
+    summarizer = await self.ai.summarizer.create(mode);
     summarizer.addEventListener("downloadprogress", (e) => {
       console.log(e.loaded, e.total);
     });
@@ -54,10 +70,18 @@ async function initializeSummarizer() {
   return summarizer;
 }
 
-async function summarize(text) {
-    const summarizer = await initializeSummarizer();
+async function summarize(text, tone, length) {
+    let summarizer, context;
+    if (tone === 'quick' && length === 'short') {
+      summarizer = await initializeSummarizer(quickShort);
+      context = "This articles is intended for people who want a quick summary."
+    } else if (tone === 'academic' && length === 'long') {
+      summarizer = await initializeSummarizer(acadLong);
+      context = "This article is intended for a academicians."
+    }
+    // const summarizer = await initializeSummarizer();
     const summary = await summarizer.summarize(text, {
-      context: "This article is intended for a tech-savvy audience.",
+      context: context,
     });
     // console.log(summary);
     return summary;
