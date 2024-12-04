@@ -15,6 +15,7 @@ export default function Home() {
   const [translatedText, setTranslatedText] = useState<string>("");
   const [summarizedText, setSummarizedText] = useState<string>("");
   const [targetLang, setTargetLang] = useState<string>(languages[8].code);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     console.log(tabExt);
@@ -32,6 +33,7 @@ export default function Home() {
       let length = summaryLength;
       if (action) {
         console.log(`Sending message to retrieve ${tabExt} text!`);
+        setLoading(true);
         chrome.runtime.sendMessage(
           { action, tabId, targetLang, tone, length },
           (response) => {
@@ -42,6 +44,7 @@ export default function Home() {
               );
               return;
             }
+            setLoading(false);
             const text = response?.text || "No Text available.";
             if (tabExt === "original") setOriginalText(text);
             else if (tabExt === "translated") setTranslatedText(text);
@@ -77,6 +80,7 @@ export default function Home() {
       <ContentView
         tab={tabExt}
         content={sampleContent}
+        loading = {loading}
         onTabChange={setTab}
         setTargetLang={setTargetLang}
       />

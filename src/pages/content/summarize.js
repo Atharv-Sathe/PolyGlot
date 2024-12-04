@@ -4,6 +4,8 @@ otMeta.content =
   "AutvjN/wgfPdVkQvxGuf2J4/AVBGv5krnKblHWDzEM1HKzvSJ+nhgRaZIQT4s9p8K0oVW3QAWfsyW5NcTxZBsQcAAABzeyJvcmlnaW4iOiJjaHJvbWUtZXh0ZW5zaW9uOi8vbGJvcGpiYmtqZW1pYmtqY2hrbWlhZmZmanBpaWdiY2siLCJmZWF0dXJlIjoiQUlTdW1tYXJpemF0aW9uQVBJIiwiZXhwaXJ5IjoxNzUzMTQyNDAwfQ==";
 document.head.append(otMeta);
 
+import { marked } from "marked";
+
 console.log("Summarizer Imported!");
 
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
@@ -83,6 +85,7 @@ async function summarize(text, tone, length) {
     const summary = await summarizer.summarize(text, {
       context: context,
     });
+    const html = marked.parse(summary)
     // console.log(summary);
-    return summary;
+    return html;
 }
