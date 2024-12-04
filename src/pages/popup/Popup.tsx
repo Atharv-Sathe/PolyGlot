@@ -8,13 +8,13 @@ import type { Mode, ContentTab, SummaryLength } from "../../types";
 import { languages } from "../../types";
 
 export default function Home() {
-    const [mode, setMode] = useState<Mode>("academic");
+    const [mode, setMode] = useState<Mode>("quick");
     const [summaryLength, setSummaryLength] = useState<SummaryLength>("Short");
     const [tabExt, setTab] = useState<ContentTab>("original");
     const [originalText, setOriginalText] = useState<string>("");
     const [translatedText, setTranslatedText] = useState<string>("");
     const [summarizedText, setSummarizedText] = useState<string>("");
-    const [targetLang, setTargetLang] = useState<string>(languages[0].code);
+    const [targetLang, setTargetLang] = useState<string>(languages[8].code);
 
     useEffect(() => {
         console.log(tabExt);
@@ -49,7 +49,7 @@ export default function Home() {
                 );
             }
         });
-    }, [tabExt]);
+    }, [tabExt, targetLang]);
 
     const sampleContent = {
         originalText: originalText,

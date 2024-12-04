@@ -8,7 +8,7 @@ export function LanguageSelector({
     setTargetLang: React.Dispatch<React.SetStateAction<string>>;
 }) {
     const [isOpen, setIsOpen] = useState(false);
-    const [selectedLanguage, setSelectedLanguage] = useState(languages[0]);
+    const [selectedLanguage, setSelectedLanguage] = useState(languages[8]);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
