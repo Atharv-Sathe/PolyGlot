@@ -7,11 +7,11 @@
   "action": {
     "default_popup": "src/pages/popup/index.html",
     "default_icon": {
-      "32": "public/icon-32.png"
+      "32": "public/polyglot-32.jpeg"
     }
   },
   "icons": {
-    "128": "public/icon-128.png"
+    "128": "public/polyglot-128.jpeg"
   },
   "permissions": [
     "activeTab",
