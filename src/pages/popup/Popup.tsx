@@ -28,8 +28,8 @@ export default function Home() {
       else if (tabExt === "translated") action = "getTranslatedText";
       else if (tabExt === "summary") action = "getSummarizedText";
 
-      let tone = "academic";
-      let length = "long";
+      let tone = mode;
+      let length = summaryLength;
       if (action) {
         console.log(`Sending message to retrieve ${tabExt} text!`);
         chrome.runtime.sendMessage(
@@ -50,7 +50,7 @@ export default function Home() {
         );
       }
     });
-  }, [tabExt, targetLang]);
+  }, [tabExt, targetLang, mode]);
 
   const sampleContent = {
     originalText: originalText,

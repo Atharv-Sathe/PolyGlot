@@ -72,10 +72,10 @@ async function initializeSummarizer(mode) {
 
 async function summarize(text, tone, length) {
     let summarizer, context;
-    if (tone === 'quick' && length === 'short') {
+    if (tone === 'quick' && length === 'Short') {
       summarizer = await initializeSummarizer(quickShort);
       context = "This articles is intended for people who want a quick summary."
-    } else if (tone === 'academic' && length === 'long') {
+    } else if (tone === 'academic' && length === 'Long') {
       summarizer = await initializeSummarizer(acadLong);
       context = "This article is intended for a academicians."
     }
